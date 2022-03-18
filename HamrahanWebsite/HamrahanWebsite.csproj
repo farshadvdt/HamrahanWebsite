@@ -1,0 +1,72 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.12">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.12">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Identity.Web" Version="1.23.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Contexts\HamrahanTemplate.persistence.csproj" />
+    <ProjectReference Include="..\FarshadTools\FarshadTools.csproj" />
+    <ProjectReference Include="..\HamrahanTemplate.Infrastructure\HamrahanTemplate.Infrastructure.csproj" />
+    <ProjectReference Include="..\HamrahanTemplates.Application\HamrahanTemplate.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Admin\Models\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\AdminPanel\scss\.sass-cache\2110e378022a379366b86437a1d53ed479b6b8f1\admin.scssc" />
+    <None Include="wwwroot\AdminPanel\scss\.sass-cache\2110e378022a379366b86437a1d53ed479b6b8f1\_cards.scssc" />
+    <None Include="wwwroot\AdminPanel\scss\.sass-cache\2110e378022a379366b86437a1d53ed479b6b8f1\_footer.scssc" />
+    <None Include="wwwroot\AdminPanel\scss\.sass-cache\2110e378022a379366b86437a1d53ed479b6b8f1\_global.scssc" />
+    <None Include="wwwroot\AdminPanel\scss\.sass-cache\2110e378022a379366b86437a1d53ed479b6b8f1\_mixins.scssc" />
+    <None Include="wwwroot\AdminPanel\scss\.sass-cache\2110e378022a379366b86437a1d53ed479b6b8f1\_utilities.scssc" />
+    <None Include="wwwroot\AdminPanel\scss\.sass-cache\2110e378022a379366b86437a1d53ed479b6b8f1\_variables.scssc" />
+    <None Include="wwwroot\AdminPanel\scss\.sass-cache\2f138efd217ae2f3d78d1d556f5664b35258f07a\_navbar_colors.scssc" />
+    <None Include="wwwroot\AdminPanel\scss\.sass-cache\2f138efd217ae2f3d78d1d556f5664b35258f07a\_navbar_fixed.scssc" />
+    <None Include="wwwroot\AdminPanel\scss\.sass-cache\2f138efd217ae2f3d78d1d556f5664b35258f07a\_navbar_global.scssc" />
+    <None Include="wwwroot\AdminPanel\scss\.sass-cache\2f138efd217ae2f3d78d1d556f5664b35258f07a\_navbar_static.scssc" />
+    <None Include="wwwroot\AdminPanel\scss\.sass-cache\2f138efd217ae2f3d78d1d556f5664b35258f07a\_navbar_toggle.scssc" />
+    <None Include="wwwroot\AdminPanel\scss\.sass-cache\8397aaa9b962e8ccb4dc67d257e0efda3f539661\admin.scssc" />
+    <None Include="wwwroot\AdminPanel\scss\.sass-cache\8397aaa9b962e8ccb4dc67d257e0efda3f539661\sb-admin.scssc" />
+    <None Include="wwwroot\AdminPanel\scss\.sass-cache\8397aaa9b962e8ccb4dc67d257e0efda3f539661\_cards.scssc" />
+    <None Include="wwwroot\AdminPanel\scss\.sass-cache\8397aaa9b962e8ccb4dc67d257e0efda3f539661\_footer.scssc" />
+    <None Include="wwwroot\AdminPanel\scss\.sass-cache\8397aaa9b962e8ccb4dc67d257e0efda3f539661\_global.scssc" />
+    <None Include="wwwroot\AdminPanel\scss\.sass-cache\8397aaa9b962e8ccb4dc67d257e0efda3f539661\_login.scssc" />
+    <None Include="wwwroot\AdminPanel\scss\.sass-cache\8397aaa9b962e8ccb4dc67d257e0efda3f539661\_mixins.scssc" />
+    <None Include="wwwroot\AdminPanel\scss\.sass-cache\8397aaa9b962e8ccb4dc67d257e0efda3f539661\_utilities.scssc" />
+    <None Include="wwwroot\AdminPanel\scss\.sass-cache\8397aaa9b962e8ccb4dc67d257e0efda3f539661\_variables.scssc" />
+    <None Include="wwwroot\AdminPanel\scss\.sass-cache\b67c63e90585d4bb17d3a8c18a973c05796be1ef\_navbar_colors.scssc" />
+    <None Include="wwwroot\AdminPanel\scss\.sass-cache\b67c63e90585d4bb17d3a8c18a973c05796be1ef\_navbar_fixed.scssc" />
+    <None Include="wwwroot\AdminPanel\scss\.sass-cache\b67c63e90585d4bb17d3a8c18a973c05796be1ef\_navbar_global.scssc" />
+    <None Include="wwwroot\AdminPanel\scss\.sass-cache\b67c63e90585d4bb17d3a8c18a973c05796be1ef\_navbar_static.scssc" />
+    <None Include="wwwroot\AdminPanel\scss\.sass-cache\b67c63e90585d4bb17d3a8c18a973c05796be1ef\_navbar_toggle.scssc" />
+    <None Include="wwwroot\BootstrapJalaliDatePicker\bootstrap-datepicker.fa.js" />
+    <None Include="wwwroot\BootstrapJalaliDatePicker\bootstrap-datepicker.fa.min.js" />
+    <None Include="wwwroot\BootstrapJalaliDatePicker\bootstrap-datepicker.js" />
+    <None Include="wwwroot\BootstrapJalaliDatePicker\bootstrap-datepicker.min.js" />
+  </ItemGroup>
+
+</Project>
