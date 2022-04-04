@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HamrahanTemplate.Infrastructure.Contract
 {
@@ -23,6 +21,15 @@ namespace HamrahanTemplate.Infrastructure.Contract
         /// <param name="filter"></param>
         /// <returns></returns>
         IQueryable<T> Find(Expression<Func<T, bool>> filter);
+
+        /// <summary>
+        /// دریافت جدید ترین آیتم ها
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="numberOfTakeItems"></param>
+        /// <returns></returns>
+        public IEnumerable<T> GetLatestItems(Expression<Func<T, object>> filter, int numberOfTakeItems);
+
         /// <summary>
         /// متد فیلتر با استفاده از کوئری
         /// </summary>

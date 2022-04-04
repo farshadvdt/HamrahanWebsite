@@ -102,6 +102,8 @@ namespace HamrahanTemplate.Application.DTOs
         [Required(ErrorMessage = "جنسیت را وارد کنید")]
         [Display(Name = "جنسیت")]
         public bool Gender { get; set; }
-        public string Role { get; set; }
+        //public string Role { get; set; }
+        public int CurrentPage { get; set; }
+        public int PageSize { get; set; }
     }
 }

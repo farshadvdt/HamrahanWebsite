@@ -3,6 +3,7 @@
 
 @inject SignInManager<Person> SignInManager
 @inject UserManager<Person> UserManager
+@inject RoleManager<IdentityRole> RoleManager
 
 @if (SignInManager.IsSignedIn(User))
 {

@@ -11,9 +11,11 @@ namespace HamrahanTemplate.Application.DTOs
     public class RoleDTO
     {
         public string Id { get; set; }
-        [Required(ErrorMessage = "لطفا { 0 } را وارد کنید")]
-        [DisplayName("نقش کاربر")]
+
+        //[Required(ErrorMessage = "لطفا { 0 } را وارد کنید")]
+        [Display(Name = "نقش")]
         public string Name { get; set; }
+
         public string NormalizedName { get; set; }
         public string ConcurrencyStamp { get; set; }
 

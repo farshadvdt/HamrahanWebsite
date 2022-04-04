@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HamrahanTemplate.persistence.Migrations
 {
     [DbContext(typeof(HamrahanDbContext))]
-    [Migration("20220304151909_Test")]
-    partial class Test
+    [Migration("20220329190705_tet")]
+    partial class tet
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -178,7 +178,9 @@ namespace HamrahanTemplate.persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Age")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("int")
+                        .HasComputedColumnSql("(datediff(year,[Birthdate],getdate()))", false);
 
                     b.Property<DateTime>("Birthdate")
                         .HasColumnType("datetime2");
@@ -201,7 +203,11 @@ namespace HamrahanTemplate.persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasMaxLength(101)
+                        .HasColumnType("nvarchar(101)")
+                        .HasComputedColumnSql("(([FirstName]+'')+[Lastname])", false);
 
                     b.Property<bool>("Gender")
                         .HasColumnType("bit");
@@ -218,6 +224,10 @@ namespace HamrahanTemplate.persistence.Migrations
                     b.Property<string>("NationalCode")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -226,7 +236,8 @@ namespace HamrahanTemplate.persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("PhoneNumber");
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
@@ -235,7 +246,8 @@ namespace HamrahanTemplate.persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TelePhone")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("TelePhone");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -247,6 +259,9 @@ namespace HamrahanTemplate.persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("EducationGradecode");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
@@ -588,13 +603,13 @@ namespace HamrahanTemplate.persistence.Migrations
 
             modelBuilder.Entity("Hamrahan.Models.Person", b =>
                 {
-                    b.HasOne("Hamrahan.Models.EducationGrade", "EducationGradecodeNavigation")
+                    b.HasOne("Hamrahan.Models.EducationGrade", "EducationGradeNavigation")
                         .WithMany("People")
                         .HasForeignKey("EducationGradecode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("EducationGradecodeNavigation");
+                    b.Navigation("EducationGradeNavigation");
                 });
 
             modelBuilder.Entity("Hamrahan.Models.Post", b =>

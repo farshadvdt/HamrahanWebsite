@@ -1,22 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
-
-using HamrahanTemplate.persistence;
+﻿using FarshadTools;
+using Hamrahan.Models;
+using HamrahanTemplate.Application.DTOs;
+using HamrahanTemplate.Application.Pagination;
+using HamrahanTemplate.Infrastructure.UnitOfWork;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Contexts;
-using HamrahanTemplate.Infrastructure.UnitOfWork;
-using HamrahanTemplate.Application.DTOs;
-using Microsoft.AspNetCore.Identity;
-
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Hamrahan.Models;
-using Microsoft.Win32;
-using Microsoft.Identity.Client;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
 
 namespace HamrahanWebsite.Areas.Admin.Controllers
 {
@@ -36,28 +30,47 @@ namespace HamrahanWebsite.Areas.Admin.Controllers
         }
 
         // GET: PersonController
-        public ActionResult Index()
+        public ActionResult Index([FromQuery] PersonPaginationParameters parameters)
         {
+            if (parameters.PageNumber < 1)
+            {
+                parameters.PageNumber = 1;
+            }
+
+            var person = _uow.Person.FindAllByPagination(parameters);
+            ViewBag.CurrentPage = person.CurrentPage;
+            ViewBag.TotalPages = person.TotalPages;
+
+
+
+
+
+
+            ///only in case if bad page entered
+
             List<PersonDTO> personDTO = new();
-            var person = _uow.Person.GetAll().ToList();
+
+       
             
             foreach (var item in person)
             {
-                personDTO.Add(new PersonDTO {
+                personDTO.Add(new PersonDTO
+                {
 
                     FirstName = item.FirstName,
                     Lastname = item.Lastname,
                     TelePhone = item.TelePhone,
                     PhoneNumber = item.PhoneNumber,
-                    EducationGradeName=_uow.Grade.Find(t=>t.Code == item.EducationGradeCode).FirstOrDefault().Grade,
+                    EducationGradeName = _uow.Grade.Find(t => t.Code == item.EducationGradecode).FirstOrDefault().Grade,
                     Age = item.Age,
                     Gender = item.Gender,
                     UserName = item.Email,
+                    
 
-
-                });
+                }) ;
             }
             return View(personDTO);
+
         }
 
         // GET: PersonController/Details/5
@@ -65,17 +78,6 @@ namespace HamrahanWebsite.Areas.Admin.Controllers
         {
 
             var person = _uow.Person.FindById(id).FirstOrDefault();
-            //var roles = new List<SelectListItem>(
-
-            //_roleManager.Roles.Select(p =>
-
-            //    new SelectListItem
-            //    {
-            //        Text = p.Name,
-            //        Value = p.Id,
-
-            //    }).ToList());
-
             var personDto = new PersonDTO
             {
 
@@ -102,27 +104,13 @@ namespace HamrahanWebsite.Areas.Admin.Controllers
         // GET: PersonController/Create
         public ActionResult Create()
         {
-            //var educationGrade = new SelectList(
-            //    _uow.Grade.GetAll(), "Code", "Grade" );
+      
             ViewData["EducationGradeCode"] = new SelectList(_uow.Grade.GetAll(), "Code", "Grade");
-            ViewData["Role"] = new SelectList(_roleManager.Roles.AsEnumerable(), "Id", "Name");
+
+           
 
 
-            //var role = new List<SelectListItem>(
-
-            //          _roleManager.Roles.Select(p => new SelectListItem
-            //          {
-            //              Text = p.Name,
-            //              Value = p.Name
-            //          }
-            //              ).ToList());
-
-
-            return View(
-                //new PersonDTO { Roles = role,
-                //EducationGrades = educationGrade}
-                //
-                );
+            return View();
             
         }
 
@@ -142,7 +130,7 @@ namespace HamrahanWebsite.Areas.Admin.Controllers
                     Lastname = personDTO.Lastname,
                     TelePhone = personDTO.TelePhone,
                     PhoneNumber = personDTO.PhoneNumber,
-                    EducationGradeCode=personDTO.EducationGradeCode,
+                    EducationGradecode=personDTO.EducationGradeCode,
                     UserName = personDTO.Email,
                     Birthdate = personDTO.Birthdate,
                     NationalCode = personDTO.NationalCode,
@@ -150,19 +138,17 @@ namespace HamrahanWebsite.Areas.Admin.Controllers
                     Address = personDTO.Address,
                     Gender=personDTO.Gender,
                     
+                    
                 };
 
-               // ViewData["EducationGradeCode"] = new SelectList(_uow.Grade.GetAll(), "Code", "Grade", person.EducationGradeCode);
                 var result = _userManager.CreateAsync(person, personDTO.Password).Result;
-                var findPerson = _userManager.FindByIdAsync(person.Id).Result;
-                var addRole = _userManager.AddToRoleAsync(findPerson, personDTO.Role).Result;
+                var addRole = _userManager.AddToRoleAsync(person,Roles.Customer).Result;
+               
 
-                
-                
                 if (result.Succeeded && addRole.Succeeded)
                 {
                     return RedirectToAction("Index", "Person", new { area = "Admin" });
-                    TempData["msg"] = "ثبت شد";
+                    
                 }
 
                 string message = "";
@@ -173,6 +159,7 @@ namespace HamrahanWebsite.Areas.Admin.Controllers
                 TempData["Message"] = message;
                 return View(personDTO);
             }
+
             catch
             {
                 return View(personDTO);
@@ -222,26 +209,5 @@ namespace HamrahanWebsite.Areas.Admin.Controllers
             }
         }
 
-
-        //public IActionResult AddUserRole(string id)
-        //{
-        //    var roles = new List<SelectListItem>(
-
-        //        _roleManager.Roles.Select(p =>
-
-        //            new SelectListItem
-        //            {
-        //                Text = p.Name,
-        //                Value = p.Id,
-
-        //            }).ToList());
-
-
-        //    return View(new AddUSerRoleDTO
-        //    {
-        //        Id = id,
-        //        Roles = roles
-        //    });
-        //}
     }
 }

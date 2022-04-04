@@ -1,19 +1,22 @@
 ﻿using Hamrahan.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 #nullable disable
 
 namespace Hamrahan.Models
 {
-    public partial class StudentCourse
+    public partial class UserCourse
     {
         public int ID { get; set; }
-        public string StudentID { get; set; }
+        public string UserId { get; set; }
         public long CourseID { get; set; }
         public bool? IsRegistered { get; set; }
 
+        [ForeignKey("CourseID")]
         public virtual Course Course { get; set; }
-        public virtual Person Student { get; set; }
+        [ForeignKey("UserId")]
+        public virtual Person User { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using Hamrahan.Models;
 using HamrahanTemplate.Application.DTOs;
 using HamrahanTemplate.Infrastructure.UnitOfWork;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -81,6 +82,7 @@ namespace HamrahanWebsite.Areas.Admin.Controllers
         }
 
         // GET: PostController/Create
+        [Authorize(Roles ="Admin")]
         public  IActionResult Create()
         {
             return View();

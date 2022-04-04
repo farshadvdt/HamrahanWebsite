@@ -12,6 +12,7 @@ namespace HamrahanTemplate.Infrastructure.UnitOfWork
         public IPostRepository Post { get; }
         public IGradeRepository Grade { get; }
         public IPersonRepository Person { get; }
+        public ICourseRepository Course { get; }
  
         void save();
         void Dispose();

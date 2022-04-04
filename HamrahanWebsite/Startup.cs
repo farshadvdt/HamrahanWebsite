@@ -17,6 +17,7 @@ using Microsoft.Identity.Web;
 using System.Security.Claims;
 using Microsoft.Identity.Client;
 using HamrahanWebsite.Areas.Identity;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace HamrahanWebsite
 {
@@ -34,9 +35,21 @@ namespace HamrahanWebsite
         {
             services.AddControllersWithViews();
             services.AddDbContext<HamrahanDbContext>(option =>
-            option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddIdentity<Person, IdentityRole>().
-                AddEntityFrameworkStores<HamrahanDbContext>().AddDefaultTokenProviders();
+            option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+            .UseQueryTrackingBehavior( QueryTrackingBehavior.NoTracking)); //just for not tracking queries for better performance
+            services.AddIdentity<Person, IdentityRole>(option =>
+            {
+                option.User.RequireUniqueEmail = true;
+                option.Password.RequireDigit = false;
+                option.Password.RequiredLength = 8;
+                option.Password.RequireNonAlphanumeric = false;
+               
+                
+            }).AddEntityFrameworkStores<HamrahanDbContext>().AddDefaultTokenProviders();
+            services.AddAuthorization(option =>
+            {
+                option.AddPolicy("WatchPosts", policy => policy.RequireClaim("Watch Post"));
+            });
             
             //services.AddAuthentication(option =>
             //{
@@ -54,6 +67,9 @@ namespace HamrahanWebsite
             services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddScoped<IUow, Uow>();
             services.AddSingleton<IEmailSender, EmailService>();
+            //for adding tempdata
+            services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();
+            
         
 
         }
@@ -64,17 +80,23 @@ namespace HamrahanWebsite
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+           
             }
+      
             else
             {
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            
+            
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             
             app.UseRouting();
+            
             app.UseAuthentication();
 
             app.UseAuthorization();

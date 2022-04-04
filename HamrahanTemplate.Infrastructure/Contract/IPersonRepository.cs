@@ -1,15 +1,27 @@
 ﻿using Hamrahan.Models;
-using System;
-using System.Collections.Generic;
+using HamrahanTemplate.Application.Pagination;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HamrahanTemplate.Infrastructure.Contract
 {
-   public interface IPersonRepository:IRepository<Person>
+    public interface IPersonRepository:IRepository<Person>
     {
+
+        /// <summary>
+        /// یافتن یوزر با شناسه
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         IQueryable<Person> FindById(string? id);
+        /// <summary>
+        /// متد برای صفحه بندی موارد دریافتی
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="pageNumber"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         
+        public Pagination<Person> FindAllByPagination(PersonPaginationParameters parameters);
     }
+
 }

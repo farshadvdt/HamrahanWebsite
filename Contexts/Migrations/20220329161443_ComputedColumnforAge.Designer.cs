@@ -4,14 +4,16 @@ using Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HamrahanTemplate.persistence.Migrations
 {
     [DbContext(typeof(HamrahanDbContext))]
-    partial class HamrahanDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220329161443_ComputedColumnforAge")]
+    partial class ComputedColumnforAge
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -19,21 +21,6 @@ namespace HamrahanTemplate.persistence.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.12")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("CourseKeyword", b =>
-                {
-                    b.Property<long>("CoursesID")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("KeywordsID")
-                        .HasColumnType("int");
-
-                    b.HasKey("CoursesID", "KeywordsID");
-
-                    b.HasIndex("KeywordsID");
-
-                    b.ToTable("CourseKeyword");
-                });
 
             modelBuilder.Entity("Hamrahan.Models.Class", b =>
                 {
@@ -66,26 +53,11 @@ namespace HamrahanTemplate.persistence.Migrations
                     b.Property<byte>("ClassCode")
                         .HasColumnType("tinyint");
 
-                    b.Property<string>("CourseDescription")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CourseGroupCode")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CourseImageName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("CoursePrice")
+                    b.Property<decimal>("Fee")
                         .HasColumnType("decimal(15,2)");
 
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Keyword")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("LessonCode")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("StartingDay")
                         .HasColumnType("date");
@@ -104,70 +76,15 @@ namespace HamrahanTemplate.persistence.Migrations
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
 
-                    b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("ID");
 
                     b.HasIndex("ClassCode");
 
-                    b.HasIndex("CourseGroupCode");
+                    b.HasIndex("LessonCode");
 
                     b.HasIndex("TeacherID");
 
                     b.ToTable("Course", "Education");
-                });
-
-            modelBuilder.Entity("Hamrahan.Models.CourseEpisode", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("CourseId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("EpisodeFileName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<TimeSpan>("EpisodeTime")
-                        .HasColumnType("time");
-
-                    b.Property<string>("EpisodeTitle")
-                        .IsRequired()
-                        .HasMaxLength(400)
-                        .HasColumnType("nvarchar(400)");
-
-                    b.Property<bool>("IsFree")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseId");
-
-                    b.ToTable("CourseEpisode", "Education");
-                });
-
-            modelBuilder.Entity("Hamrahan.Models.CourseGroup", b =>
-                {
-                    b.Property<int>("Code")
-                        .HasColumnType("int");
-
-                    b.Property<byte>("EducationGradeCode")
-                        .HasColumnType("tinyint");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Code")
-                        .HasName("PK_CourseGroup");
-
-                    b.HasIndex("EducationGradeCode");
-
-                    b.ToTable("CourseGroup", "Education");
                 });
 
             modelBuilder.Entity("Hamrahan.Models.EducationGrade", b =>
@@ -228,59 +145,25 @@ namespace HamrahanTemplate.persistence.Migrations
                     b.ToTable("Keyword", "Weblog");
                 });
 
-            modelBuilder.Entity("Hamrahan.Models.Order", b =>
+            modelBuilder.Entity("Hamrahan.Models.Lesson", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsFinaly")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("OrderSum")
+                    b.Property<int>("Code")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
+                    b.Property<byte>("EducationGradeCode")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Code")
+                        .HasName("PK_Lesson");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("EducationGradeCode");
 
-                    b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("Hamrahan.Models.OrderDetail", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
-
-                    b.Property<long>("CourseId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Price")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseId");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("OrderDetails");
+                    b.ToTable("Lesson", "Education");
                 });
 
             modelBuilder.Entity("Hamrahan.Models.Person", b =>
@@ -320,11 +203,7 @@ namespace HamrahanTemplate.persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullName")
-                        .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasMaxLength(101)
-                        .HasColumnType("nvarchar(101)")
-                        .HasComputedColumnSql("(([FirstName]+'')+[Lastname])", false);
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Gender")
                         .HasColumnType("bit");
@@ -358,11 +237,6 @@ namespace HamrahanTemplate.persistence.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<DateTime>("RegisterDate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasComputedColumnSql("(getdate())", false);
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -496,6 +370,34 @@ namespace HamrahanTemplate.persistence.Migrations
                     b.ToTable("SalaryPayment", "Payment");
                 });
 
+            modelBuilder.Entity("Hamrahan.Models.StudentCourse", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ID")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("CourseID")
+                        .HasColumnType("bigint")
+                        .HasColumnName("CourseID");
+
+                    b.Property<bool?>("IsRegistered")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("StudentID")
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("StudentID");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("CourseID");
+
+                    b.HasIndex("StudentID");
+
+                    b.ToTable("Student_course", "Education");
+                });
+
             modelBuilder.Entity("Hamrahan.Models.StudentPayment", b =>
                 {
                     b.Property<long>("ID")
@@ -525,34 +427,6 @@ namespace HamrahanTemplate.persistence.Migrations
                     b.HasIndex("StudentID");
 
                     b.ToTable("StudentPayment", "Payment");
-                });
-
-            modelBuilder.Entity("Hamrahan.Models.UserCourse", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ID")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("CourseID")
-                        .HasColumnType("bigint")
-                        .HasColumnName("CourseID");
-
-                    b.Property<bool?>("IsRegistered")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("UserID");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("CourseID");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("User_course", "Education");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -686,21 +560,6 @@ namespace HamrahanTemplate.persistence.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("CourseKeyword", b =>
-                {
-                    b.HasOne("Hamrahan.Models.Course", null)
-                        .WithMany()
-                        .HasForeignKey("CoursesID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Hamrahan.Models.Keyword", null)
-                        .WithMany()
-                        .HasForeignKey("KeywordsID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Hamrahan.Models.Course", b =>
                 {
                     b.HasOne("Hamrahan.Models.Class", "ClassCodeNavigation")
@@ -709,10 +568,10 @@ namespace HamrahanTemplate.persistence.Migrations
                         .HasConstraintName("FK_Course_ClassCode")
                         .IsRequired();
 
-                    b.HasOne("Hamrahan.Models.CourseGroup", "CourseGroupCodeNavigation")
+                    b.HasOne("Hamrahan.Models.Lesson", "LessonCodeNavigation")
                         .WithMany("Courses")
-                        .HasForeignKey("CourseGroupCode")
-                        .HasConstraintName("FK_Course_CourseGroupCode")
+                        .HasForeignKey("LessonCode")
+                        .HasConstraintName("FK_Course_LessonCode")
                         .IsRequired();
 
                     b.HasOne("Hamrahan.Models.Person", "Teacher")
@@ -722,61 +581,20 @@ namespace HamrahanTemplate.persistence.Migrations
 
                     b.Navigation("ClassCodeNavigation");
 
-                    b.Navigation("CourseGroupCodeNavigation");
+                    b.Navigation("LessonCodeNavigation");
 
                     b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("Hamrahan.Models.CourseEpisode", b =>
-                {
-                    b.HasOne("Hamrahan.Models.Course", "Course")
-                        .WithMany("CourseEpisodes")
-                        .HasForeignKey("CourseId")
-                        .HasConstraintName("FK_CourseEpisode_Course")
-                        .IsRequired();
-
-                    b.Navigation("Course");
-                });
-
-            modelBuilder.Entity("Hamrahan.Models.CourseGroup", b =>
+            modelBuilder.Entity("Hamrahan.Models.Lesson", b =>
                 {
                     b.HasOne("Hamrahan.Models.EducationGrade", "EducationGradeCodeNavigation")
-                        .WithMany("CourseGroups")
+                        .WithMany("Lessons")
                         .HasForeignKey("EducationGradeCode")
-                        .HasConstraintName("FK_CourseGroup_EducationGradeCode")
+                        .HasConstraintName("FK_Lesson_EducationGradeCode")
                         .IsRequired();
 
                     b.Navigation("EducationGradeCodeNavigation");
-                });
-
-            modelBuilder.Entity("Hamrahan.Models.Order", b =>
-                {
-                    b.HasOne("Hamrahan.Models.Person", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Hamrahan.Models.OrderDetail", b =>
-                {
-                    b.HasOne("Hamrahan.Models.Course", "Course")
-                        .WithMany("OrderDetails")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Hamrahan.Models.Order", "Order")
-                        .WithMany("OrderDetails")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-
-                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("Hamrahan.Models.Person", b =>
@@ -829,6 +647,24 @@ namespace HamrahanTemplate.persistence.Migrations
                     b.Navigation("Employee");
                 });
 
+            modelBuilder.Entity("Hamrahan.Models.StudentCourse", b =>
+                {
+                    b.HasOne("Hamrahan.Models.Course", "Course")
+                        .WithMany("StudentCourses")
+                        .HasForeignKey("CourseID")
+                        .HasConstraintName("FK_Student_course_Course")
+                        .IsRequired();
+
+                    b.HasOne("Hamrahan.Models.Person", "Student")
+                        .WithMany("StudentCourses")
+                        .HasForeignKey("StudentID")
+                        .HasConstraintName("FK__Student_c__Stude__5070F446");
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("Hamrahan.Models.StudentPayment", b =>
                 {
                     b.HasOne("Hamrahan.Models.Course", "Course")
@@ -845,24 +681,6 @@ namespace HamrahanTemplate.persistence.Migrations
                     b.Navigation("Course");
 
                     b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("Hamrahan.Models.UserCourse", b =>
-                {
-                    b.HasOne("Hamrahan.Models.Course", "Course")
-                        .WithMany("UserCourses")
-                        .HasForeignKey("CourseID")
-                        .HasConstraintName("FK_UserCourse_Course")
-                        .IsRequired();
-
-                    b.HasOne("Hamrahan.Models.Person", "User")
-                        .WithMany("UserCourses")
-                        .HasForeignKey("UserId")
-                        .HasConstraintName("FK__Student_c__Stude__5070F446");
-
-                    b.Navigation("Course");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -923,23 +741,14 @@ namespace HamrahanTemplate.persistence.Migrations
 
             modelBuilder.Entity("Hamrahan.Models.Course", b =>
                 {
-                    b.Navigation("CourseEpisodes");
-
-                    b.Navigation("OrderDetails");
+                    b.Navigation("StudentCourses");
 
                     b.Navigation("StudentPayments");
-
-                    b.Navigation("UserCourses");
-                });
-
-            modelBuilder.Entity("Hamrahan.Models.CourseGroup", b =>
-                {
-                    b.Navigation("Courses");
                 });
 
             modelBuilder.Entity("Hamrahan.Models.EducationGrade", b =>
                 {
-                    b.Navigation("CourseGroups");
+                    b.Navigation("Lessons");
 
                     b.Navigation("People");
                 });
@@ -949,9 +758,9 @@ namespace HamrahanTemplate.persistence.Migrations
                     b.Navigation("PostKeyWords");
                 });
 
-            modelBuilder.Entity("Hamrahan.Models.Order", b =>
+            modelBuilder.Entity("Hamrahan.Models.Lesson", b =>
                 {
-                    b.Navigation("OrderDetails");
+                    b.Navigation("Courses");
                 });
 
             modelBuilder.Entity("Hamrahan.Models.Person", b =>
@@ -962,9 +771,9 @@ namespace HamrahanTemplate.persistence.Migrations
 
                     b.Navigation("SalaryPayments");
 
-                    b.Navigation("StudentPayments");
+                    b.Navigation("StudentCourses");
 
-                    b.Navigation("UserCourses");
+                    b.Navigation("StudentPayments");
                 });
 
             modelBuilder.Entity("Hamrahan.Models.Post", b =>

@@ -1,4 +1,5 @@
 ﻿using Contexts;
+using FarshadTools;
 using HamrahanTemplate.Infrastructure.Contract;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -27,15 +28,22 @@ namespace HamrahanTemplate.Infrastructure.Repository
         public IEnumerable<T> GetAll()
         {
             var result = dbset;
-            return result.ToList();
+            return result.AsNoTracking().ToList();
         }
+       
         public IQueryable<T> Find(Expression<Func<T, bool>> filter)
         {
-            return dbset.Where(filter);
+            return dbset.Where(filter).AsNoTracking();
         }
+
+        public IEnumerable<T> GetLatestItems(Expression<Func<T, object>> filter,int numberOfTakeItems)
+        {
+            return dbset.OrderByDescending(filter).Take(numberOfTakeItems).AsNoTracking().ToList();
+        }
+
         public IQueryable<T> Find(string query, params object[] parameters)
         {
-            return dbset.FromSqlRaw(query, parameters);
+            return dbset.FromSqlRaw(query, parameters).AsNoTracking();
         }
         public void Insert(T entity)
         {

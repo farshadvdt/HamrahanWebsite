@@ -11,6 +11,8 @@ namespace Hamrahan.Models
         public int ID { get; set; }
         public string Title { get; set; }
         public virtual ICollection<PostKeyWord> PostKeyWords{ get; set; }
+        public ICollection<Course> Courses { get; set; }
+
 
     }
 }

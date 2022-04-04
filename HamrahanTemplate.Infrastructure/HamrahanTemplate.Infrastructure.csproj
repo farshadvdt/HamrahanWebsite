@@ -6,6 +6,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Contexts\HamrahanTemplate.persistence.csproj" />
+    <ProjectReference Include="..\FarshadTools\FarshadTools.csproj" />
+    <ProjectReference Include="..\HamrahanTemplates.Application\HamrahanTemplate.Application.csproj" />
   </ItemGroup>
 
 </Project>

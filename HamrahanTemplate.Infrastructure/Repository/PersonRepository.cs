@@ -1,11 +1,10 @@
 ﻿using Contexts;
+using FarshadTools;
 using Hamrahan.Models;
+using HamrahanTemplate.Application.Pagination;
 using HamrahanTemplate.Infrastructure.Contract;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HamrahanTemplate.Infrastructure.Repository
 {
@@ -17,9 +16,17 @@ namespace HamrahanTemplate.Infrastructure.Repository
         {
             _db = db;
         }
+
+
+
         public IQueryable<Person> FindById(string? id)
         {
             return _db.Person.Where(t => t.Id == id);
+        }
+        public Pagination<Person> FindAllByPagination(PersonPaginationParameters parameters)
+        {
+            Pagination<Person> p= new(_db.Person.OrderBy(n => n.RegisterDate), parameters.PageNumber, parameters.PageSize);
+            return p;
         }
     }
 }

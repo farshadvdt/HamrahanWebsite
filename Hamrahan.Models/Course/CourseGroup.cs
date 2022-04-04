@@ -5,9 +5,9 @@ using System.Collections.Generic;
 #nullable disable
 namespace Hamrahan.Models
 {
-    public partial class Lesson
+    public partial class CourseGroup
     {
-        public Lesson()
+        public CourseGroup()
         {
             Courses = new HashSet<Course>();
         }

@@ -15,6 +15,7 @@ namespace HamrahanTemplate.Infrastructure.UnitOfWork
         private IPostRepository _post;
         private IGradeRepository _grade;
         private IPersonRepository _person;
+        private ICourseRepository _course;
    
         public Uow(HamrahanDbContext db)
         {
@@ -46,6 +47,14 @@ namespace HamrahanTemplate.Infrastructure.UnitOfWork
                 if (_person == null)
                     _person = new PersonRepository(_db);
                 return _person;
+            }
+        }  public ICourseRepository Course
+        {
+            get
+            {
+                if (_course == null)
+                    _course = new CourseRepository(_db);
+                return _course;
             }
         }
         public void Dispose()

@@ -19,14 +19,17 @@ namespace Contexts
         public virtual DbSet<Course> Courses { get; set; }
         public virtual DbSet<EducationGrade> EducationGrades { get; set; }
         public virtual DbSet<Expenditure> Expenditures { get; set; }
-        public virtual DbSet<Lesson> Lessons { get; set; }
+        public virtual DbSet<CourseGroup> Lessons { get; set; }
        
         public virtual DbSet<SalaryPayment> SalaryPayments { get; set; }
-        public virtual DbSet<StudentCourse> StudentCourses { get; set; }
+        public virtual DbSet<UserCourse> UserCourses { get; set; }
         public virtual DbSet<StudentPayment> StudentPayments { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<Keyword> Keywords { get; set; }
         public virtual DbSet<PostKeyWord> PostKeyWords { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
+        public virtual DbSet<OrderDetail> OrderDetails { get; set; }
+        public virtual DbSet<CourseEpisode> CourseEpisodes{ get; set; }
 
 
 
@@ -45,7 +48,17 @@ namespace Contexts
             modelBuilder.HasAnnotation("Relational:Collation", "Persian_100_CI_AI");
             
             modelBuilder.Entity<Post>().HasQueryFilter(e => e.IsDeleted == true);
-            
+
+            modelBuilder.Entity<CourseEpisode>(entity =>
+            {
+                entity.ToTable("CourseEpisode", "Education");
+                entity.HasOne(d => d.Course)
+                    .WithMany(p => p.CourseEpisodes)
+                    .HasForeignKey(d => d.CourseId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CourseEpisode_Course");
+
+            });
 
             modelBuilder.Entity<Class>(entity =>
             {
@@ -64,10 +77,11 @@ namespace Contexts
             modelBuilder.Entity<Course>(entity =>
             {
                 entity.ToTable("Course", "Education");
+                entity.HasQueryFilter(e => e.IsDeleted == true);
 
                 entity.Property(e => e.ID).HasColumnName("ID");
 
-                entity.Property(e => e.Fee).HasColumnType("decimal(15, 2)");
+                entity.Property(e => e.CoursePrice).HasColumnType("decimal(15, 2)");
 
                 entity.Property(e => e.StartingDay).HasColumnType("date");
 
@@ -87,11 +101,11 @@ namespace Contexts
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Course_ClassCode");
 
-                entity.HasOne(d => d.LessonCodeNavigation)
+                entity.HasOne(d => d.CourseGroupCodeNavigation)
                     .WithMany(p => p.Courses)
-                    .HasForeignKey(d => d.LessonCode)
+                    .HasForeignKey(d => d.CourseGroupCode)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Course_LessonCode");
+                    .HasConstraintName("FK_Course_CourseGroupCode");
 
                 entity.HasOne(d => d.Teacher)
                     .WithMany(p => p.Courses)
@@ -125,12 +139,12 @@ namespace Contexts
                 entity.Property(e => e.Title).IsRequired().HasMaxLength(100);
             });
 
-            modelBuilder.Entity<Lesson>(entity =>
+            modelBuilder.Entity<CourseGroup>(entity =>
             {
                 entity.HasKey(e => e.Code)
-                    .HasName("PK_Lesson");
+                    .HasName("PK_CourseGroup");
 
-                entity.ToTable("Lesson", "Education");
+                entity.ToTable("CourseGroup", "Education");
 
                 entity.Property(e => e.Code).ValueGeneratedNever();
 
@@ -139,10 +153,10 @@ namespace Contexts
                     .HasMaxLength(50);
 
                 entity.HasOne(d => d.EducationGradeCodeNavigation)
-                    .WithMany(p => p.Lessons)
+                    .WithMany(p => p.CourseGroups)
                     .HasForeignKey(d => d.EducationGradeCode)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Lesson_EducationGradeCode");
+                    .HasConstraintName("FK_CourseGroup_EducationGradeCode");
             });
 
            
@@ -194,25 +208,25 @@ namespace Contexts
                     .HasConstraintName("FK_SalaryPayment_Employee");
             });
 
-            modelBuilder.Entity<StudentCourse>(entity =>
+            modelBuilder.Entity<UserCourse>(entity =>
             {
-                entity.ToTable("Student_course", "Education");
+                entity.ToTable("User_course", "Education");
 
                 entity.Property(e => e.ID).HasColumnName("ID");
 
                 entity.Property(e => e.CourseID).HasColumnName("CourseID");
 
-                entity.Property(e => e.StudentID).HasColumnName("StudentID");
+                entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.HasOne(d => d.Course)
-                    .WithMany(p => p.StudentCourses)
+                    .WithMany(p => p.UserCourses)
                     .HasForeignKey(d => d.CourseID)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Student_course_Course");
+                    .HasConstraintName("FK_UserCourse_Course");
 
-                entity.HasOne(d => d.Student)
-                    .WithMany(p => p.StudentCourses)
-                    .HasForeignKey(d => d.StudentID)
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserCourses)
+                    .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Student_c__Stude__5070F446");
             });
@@ -232,7 +246,7 @@ namespace Contexts
                     .WithMany(p => p.PostKeyWords)
                     .HasForeignKey(d => d.PostID)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Post_Keyword_PostID");
+                    .HasConstraintName("FK_Post_Keyword_PostID"); 
 
                 entity.HasOne(d => d.Keyword)
                     .WithMany(p => p.PostKeyWords)
@@ -281,9 +295,20 @@ namespace Contexts
             modelBuilder.Entity<IdentityUserLogin<string>>().HasKey(p => new { p.ProviderKey, p.LoginProvider });
             modelBuilder.Entity<IdentityUserRole<string>>().HasKey(p => new { p.UserId, p.RoleId });
             modelBuilder.Entity<IdentityUserToken<string>>().HasKey(p => new { p.UserId, p.LoginProvider,p.Name});
-            modelBuilder.Entity<Person>().Ignore(p => p.NormalizedEmail);
+          
             modelBuilder.Entity<Person>().ToTable("Users");
             modelBuilder.Entity<IdentityRole>().ToTable("Roles");
+            modelBuilder.Entity<Person>(entity => {
+                    entity.Property(e => e.TelePhone).HasColumnName("TelePhone");
+                    entity.Property(e => e.PhoneNumber).HasColumnName("PhoneNumber");
+                    entity.Property(e => e.Age).HasComputedColumnSql("(datediff(year,[Birthdate],getdate()))", false);
+                    entity.Property(e => e.FullName)
+                        .IsRequired()
+                        .HasMaxLength(101)
+                        .HasComputedColumnSql("(([FirstName]+'')+[Lastname])", false);
+                    entity.Property(a => a.RegisterDate).HasComputedColumnSql("(getdate())", false);
+                }
+                );
             OnModelCreatingPartial(modelBuilder);
 
             #region DeletedPersonAndRole
